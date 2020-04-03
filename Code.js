@@ -25,12 +25,23 @@ function updateSummary() {
   
   // loop through country data to create final array
   summaryData.forEach(function(country) {
-    finalArray.push([country.Country, country.NewConfirmed, country.TotalConfirmed, country.NewDeaths, country.TotalDeaths, country.NewRecovered, country.TotalRecovered]);
+    if(country.Country !== "") {
+      finalArray.push([country.Country, country.NewConfirmed, country.TotalConfirmed, country.NewDeaths, country.TotalDeaths, country.NewRecovered, country.TotalRecovered]);
+    }
   });
   
   // clear existing content
-  sh.getRange(2, 1, sh.getLastRow()-1, sh.getLastColumn()).clearContent();
+  sh.getRange(2, 1, sh.getLastRow()-1, 7).clearContent();
   
   // update with new values
   sh.getRange(2, 1, finalArray.length, finalArray[0].length).setValues(finalArray);
+}
+
+function onOpen() {
+
+  SpreadsheetApp.getUi()
+    .createMenu("COVID 19 Tracker")
+    .addItem("Update Summary Data", "updateSummary")
+    .addToUi();
+
 }
